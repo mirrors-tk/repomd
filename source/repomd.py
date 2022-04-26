@@ -133,24 +133,36 @@ class Package:
         return self._element.findtext('common:format/rpm:sourcerpm', namespaces=_ns)
 
     @property
+    def _time(seld):
+        return self._element.find('common:time', namespaces=_ns).attrib
+
+    @property
+    def file_time(self):
+        return datetime.datetime.fromtimestamp(int(self._time.get('file', 0)))
+
+    @property
     def build_time(self):
-        build_time = self._element.find('common:time', namespaces=_ns).get('build')
-        return datetime.datetime.fromtimestamp(int(build_time))
+        return datetime.datetime.fromtimestamp(int(self._time.get('build', 0)))
+
+    @property
+    def checksum(self):
+        return self._element.findtext('common:checksum', namespaces=_ns)
+
+    @property
+    def _size(self):
+        return self._element.find('common:size', namespaces=_ns).attrib
 
     @property
     def package_size(self):
-        package_size = self._element.find('common:size', namespaces=_ns).get('package')
-        return int(package_size)
+        return int(self._size.get('package', 0))
 
     @property
     def installed_size(self):
-        installed_size = self._element.find('common:size', namespaces=_ns).get('installed')
-        return int(installed_size)
+        return int(self._size.get('installed', 0))
 
     @property
     def archive_size(self):
-        archive_size = self._element.find('common:size', namespaces=_ns).get('archive')
-        return int(archive_size)
+        return int(self._size.get('archive', 0))
 
     @property
     def location(self):
@@ -158,7 +170,7 @@ class Package:
 
     @property
     def _version_info(self):
-        return self._element.find('common:version', namespaces=_ns)
+        return self._element.find('common:version', namespaces=_ns).attrib
 
     @property
     def epoch(self):
